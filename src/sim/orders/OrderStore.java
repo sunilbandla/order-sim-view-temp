@@ -10,4 +10,6 @@ public interface OrderStore {
    * Returns the next order in store.
    */
   Optional<Order> getNext();
+  /** Checks if there are new orders. */
+  boolean hasNext();
 }

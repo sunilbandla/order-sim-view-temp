@@ -28,9 +28,14 @@ public class OrderStoreImpl implements OrderStore {
    */
   @Override
   public Optional<Order> getNext() {
-    if (data == null || nextIndex >= data.length) {
+    if (!hasNext()) {
       return Optional.empty();
     }
     return Optional.of(data[nextIndex++]);
+  }
+
+  @Override
+  public boolean hasNext() {
+    return !(data == null || nextIndex >= data.length);
   }
 }
