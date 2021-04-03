@@ -49,6 +49,10 @@ public class Order {
     this.id = id;
   }
 
+  public void setShelvedAtMillis(long shelvedAtMillis) {
+    this.shelvedAtMillis = shelvedAtMillis;
+  }
+
   enum State {
     NEW,
     COOKED,
@@ -62,11 +66,12 @@ public class Order {
   private String temp;
   private long shelfLife;
   private double decayRate;
+  private long shelvedAtMillis;
 
   @Override
   public String toString() {
     return "Order {"
         + "id='" + id + '\'' + ", name='" + name + '\'' + ", temp='" + temp + '\''
-        + ", shelfLife=" + shelfLife + ", decayRate=" + decayRate + '}';
+        + ", shelfLife=" + shelfLife + ", decayRate=" + decayRate +  ", shelvedAtMillis=" + shelvedAtMillis + '}';
   }
 }
