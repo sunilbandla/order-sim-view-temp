@@ -1,0 +1,72 @@
+package sim.orders;
+
+public class Order {
+  public Order(String id, String name, String temp, int shelfLife, int decayRate) {
+    this.id = id;
+    this.name = name;
+    this.temp = temp;
+    this.shelfLife = shelfLife;
+    this.decayRate = decayRate;
+  }
+
+  public double getDecayRate() {
+    return decayRate;
+  }
+
+  public void setDecayRate(double decayRate) {
+    this.decayRate = decayRate;
+  }
+
+  public long getShelfLife() {
+    return shelfLife;
+  }
+
+  public void setShelfLife(long shelfLife) {
+    this.shelfLife = shelfLife;
+  }
+
+  public String getTemp() {
+    return temp;
+  }
+
+  public void setTemp(String temp) {
+    this.temp = temp;
+  }
+
+  public String getName() {
+    return name;
+  }
+
+  public void setName(String name) {
+    this.name = name;
+  }
+
+  public String getId() {
+    return id;
+  }
+
+  public void setId(String id) {
+    this.id = id;
+  }
+
+  enum State {
+    NEW,
+    COOKED,
+    SHELVED,
+    DELIVERED,
+    DUMPED,
+  }
+
+  private String id;
+  private String name;
+  private String temp;
+  private long shelfLife;
+  private double decayRate;
+
+  @Override
+  public String toString() {
+    return "Order {"
+        + "id='" + id + '\'' + ", name='" + name + '\'' + ", temp='" + temp + '\''
+        + ", shelfLife=" + shelfLife + ", decayRate=" + decayRate + '}';
+  }
+}
