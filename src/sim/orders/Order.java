@@ -1,77 +1,72 @@
 package sim.orders;
 
+/**
+ * Contains order details like ID, life, etc..
+ */
 public class Order {
-  public Order(String id, String name, String temp, int shelfLife, int decayRate) {
-    this.id = id;
-    this.name = name;
-    this.temp = temp;
-    this.shelfLife = shelfLife;
-    this.decayRate = decayRate;
-  }
+    private String id;
+    private String name;
+    private String temp;
+    private long shelfLife;
+    private double decayRate;
+    private long shelvedAtMillis;
 
-  public double getDecayRate() {
-    return decayRate;
-  }
+    public Order(String id, String name, String temp, int shelfLife, int decayRate) {
+        this.id = id;
+        this.name = name;
+        this.temp = temp;
+        this.shelfLife = shelfLife;
+        this.decayRate = decayRate;
+    }
 
-  public void setDecayRate(double decayRate) {
-    this.decayRate = decayRate;
-  }
+    public double getDecayRate() {
+        return decayRate;
+    }
 
-  public long getShelfLife() {
-    return shelfLife;
-  }
+    public void setDecayRate(double decayRate) {
+        this.decayRate = decayRate;
+    }
 
-  public void setShelfLife(long shelfLife) {
-    this.shelfLife = shelfLife;
-  }
+    public long getShelfLife() {
+        return shelfLife;
+    }
 
-  public String getTemp() {
-    return temp;
-  }
+    public void setShelfLife(long shelfLife) {
+        this.shelfLife = shelfLife;
+    }
 
-  public void setTemp(String temp) {
-    this.temp = temp;
-  }
+    public String getTemp() {
+        return temp;
+    }
 
-  public String getName() {
-    return name;
-  }
+    public void setTemp(String temp) {
+        this.temp = temp;
+    }
 
-  public void setName(String name) {
-    this.name = name;
-  }
+    public String getName() {
+        return name;
+    }
 
-  public String getId() {
-    return id;
-  }
+    public void setName(String name) {
+        this.name = name;
+    }
 
-  public void setId(String id) {
-    this.id = id;
-  }
+    public String getId() {
+        return id;
+    }
 
-  public void setShelvedAtMillis(long shelvedAtMillis) {
-    this.shelvedAtMillis = shelvedAtMillis;
-  }
+    public void setId(String id) {
+        this.id = id;
+    }
 
-  enum State {
-    NEW,
-    COOKED,
-    SHELVED,
-    DELIVERED,
-    DUMPED,
-  }
+    public void setShelvedAtMillis(long shelvedAtMillis) {
+        this.shelvedAtMillis = shelvedAtMillis;
+    }
 
-  private String id;
-  private String name;
-  private String temp;
-  private long shelfLife;
-  private double decayRate;
-  private long shelvedAtMillis;
-
-  @Override
-  public String toString() {
-    return "Order {"
-        + "id='" + id + '\'' + ", name='" + name + '\'' + ", temp='" + temp + '\''
-        + ", shelfLife=" + shelfLife + ", decayRate=" + decayRate +  ", shelvedAtMillis=" + shelvedAtMillis + '}';
-  }
+    @Override
+    public String toString() {
+        return "Order {"
+                + "id='" + id + '\'' + ", name='" + name + '\'' + ", temp='" + temp + '\''
+                + ", shelfLife=" + shelfLife + ", decayRate=" + decayRate + ", shelvedAtMillis=" + shelvedAtMillis + '}';
+    }
 }

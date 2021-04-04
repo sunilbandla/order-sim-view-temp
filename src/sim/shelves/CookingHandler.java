@@ -1,34 +1,41 @@
 package sim.shelves;
 
+import sim.delivery.Courier;
 import sim.orders.Order;
 
 import java.time.Instant;
 import java.util.Map;
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import static sim.shelves.Shelf.OVERFLOW;
+import static sim.shelves.Shelf.logShelfStats;
 
+/** Handles cooking and shelving of orders. */
 public class CookingHandler implements Runnable {
     private final BlockingQueue<Order> kitchenQueue;
     private final AtomicBoolean areAllOrdersReceived;
     private final Map<Shelf, BlockingQueue<Order>> shelfQueues;
+    private final ExecutorService courierService;
 
-    public CookingHandler(BlockingQueue<Order> kitchenQueue, AtomicBoolean areAllOrdersReceived, Map<Shelf, BlockingQueue<Order>> shelfQueues) {
+    public CookingHandler(BlockingQueue<Order> kitchenQueue, AtomicBoolean areAllOrdersReceived,
+                          Map<Shelf, BlockingQueue<Order>> shelfQueues, ExecutorService courierService) {
         this.kitchenQueue = kitchenQueue;
         this.areAllOrdersReceived = areAllOrdersReceived;
         this.shelfQueues = shelfQueues;
+        this.courierService = courierService;
     }
 
     @Override
     public void run() {
-        do {
+        while (!areAllOrdersReceived.get()) {
             try {
                 Order newOrder = kitchenQueue.poll(5, TimeUnit.SECONDS);
                 if (newOrder == null) {
-                    System.out.println("*** Done cooking all orders.");
-                    return;
+                    break;
                 }
                 System.out.println("Cooked " + newOrder);
                 Shelf newOrderShelf = Shelf.toShelf(newOrder.getTemp());
@@ -39,19 +46,14 @@ public class CookingHandler implements Runnable {
                 newOrder.setShelvedAtMillis(Instant.now().toEpochMilli());
                 shelfQueues.get(newOrderShelf).put(newOrder);
                 System.out.printf("Added %s to %s shelf.%n", newOrder, newOrderShelf);
-                logShelfStats();
+                courierService.submit(new Courier(newOrder.getId(), newOrderShelf, shelfQueues));
+                System.out.printf("Dispatched courier for order %s from shelf %s.%n", newOrder.getId(), newOrderShelf);
+                logShelfStats(shelfQueues);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-        } while (!areAllOrdersReceived.get());
-    }
-
-
-    private void logShelfStats() {
-        System.out.println("\nShelf stats:");
-        shelfQueues.keySet().forEach(shelf ->
-                System.out.printf("%s - %d%n", shelf, shelfQueues.get(shelf).size()));
-        System.out.println();
+        }
+        System.out.println("*** Done cooking all orders.");
     }
 
     /**
