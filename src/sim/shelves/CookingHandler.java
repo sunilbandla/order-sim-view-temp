@@ -11,8 +11,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import static sim.shelves.Shelf.OVERFLOW;
-import static sim.shelves.Shelf.logShelfStats;
+import static sim.shelves.Shelf.*;
 
 /** Handles cooking and shelving of orders. */
 public class CookingHandler implements Runnable {
@@ -38,7 +37,7 @@ public class CookingHandler implements Runnable {
                     break;
                 }
                 System.out.println("Cooked " + newOrder);
-                Shelf newOrderShelf = Shelf.toShelf(newOrder.getTemp());
+                Shelf newOrderShelf = toShelf(newOrder.getTemp());
                 if (shelfQueues.get(newOrderShelf).size() == newOrderShelf.getCapacity()) {
                     handleOverflow();
                     newOrderShelf = OVERFLOW;
@@ -46,7 +45,7 @@ public class CookingHandler implements Runnable {
                 newOrder.setShelvedAtMillis(Instant.now().toEpochMilli());
                 shelfQueues.get(newOrderShelf).put(newOrder);
                 System.out.printf("Added %s to %s shelf.%n", newOrder, newOrderShelf);
-                courierService.submit(new Courier(newOrder.getId(), newOrderShelf, shelfQueues));
+                courierService.submit(new Courier(newOrder.getId(), toShelf(newOrder.getTemp()), shelfQueues));
                 System.out.printf("Dispatched courier for order %s from shelf %s.%n", newOrder.getId(), newOrderShelf);
                 logShelfStats(shelfQueues);
             } catch (InterruptedException e) {
@@ -64,7 +63,7 @@ public class CookingHandler implements Runnable {
         if (!overflowQueue.isEmpty()) {
             // Items need to be either moved or discarded.
             boolean wereOverflowItemsMoved = overflowQueue.removeIf(x -> {
-                Shelf currentShelf = Shelf.toShelf(x.getTemp());
+                Shelf currentShelf = toShelf(x.getTemp());
                 boolean canCurrentOrderBeMoved = shelfQueues.get(currentShelf).size() < currentShelf.getCapacity();
                 if (canCurrentOrderBeMoved) {
                     try {

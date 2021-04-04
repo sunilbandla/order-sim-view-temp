@@ -1,5 +1,9 @@
 package sim.orders;
 
+import sim.shelves.Shelf;
+
+import java.time.Instant;
+
 /**
  * Contains order details like ID, life, etc..
  */
@@ -19,48 +23,21 @@ public class Order {
         this.decayRate = decayRate;
     }
 
-    public double getDecayRate() {
-        return decayRate;
-    }
-
-    public void setDecayRate(double decayRate) {
-        this.decayRate = decayRate;
-    }
-
-    public long getShelfLife() {
-        return shelfLife;
-    }
-
-    public void setShelfLife(long shelfLife) {
-        this.shelfLife = shelfLife;
-    }
-
     public String getTemp() {
         return temp;
-    }
-
-    public void setTemp(String temp) {
-        this.temp = temp;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public String getId() {
         return id;
     }
 
-    public void setId(String id) {
-        this.id = id;
-    }
-
     public void setShelvedAtMillis(long shelvedAtMillis) {
         this.shelvedAtMillis = shelvedAtMillis;
+    }
+
+    public double getOrderValue(Shelf shelf) {
+        long age = Instant.now().toEpochMilli() - shelvedAtMillis;
+        return Math.floor((shelfLife - age - decayRate * age * shelf.getDecayModifier()) / shelfLife);
     }
 
     @Override

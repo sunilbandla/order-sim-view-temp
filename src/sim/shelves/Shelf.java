@@ -9,18 +9,20 @@ import java.util.concurrent.BlockingQueue;
  * Contains properties of shelves.
  */
 public enum Shelf {
-    HOT("hot", 10),
-    COLD("cold", 10),
-    FROZEN("frozen", 10),
-    OVERFLOW("", 15),
+    HOT("hot", 10, 1),
+    COLD("cold", 10, 1),
+    FROZEN("frozen", 10, 1),
+    OVERFLOW("", 15, 2),
     ;
 
     private final String temperature;
     private final int capacity;
+    private final int decayModifier;
 
-    Shelf(String temperature, int capacity) {
+    Shelf(String temperature, int capacity, int decayModifier) {
         this.temperature = temperature;
         this.capacity = capacity;
+        this.decayModifier = decayModifier;
     }
 
     static Shelf toShelf(String temperature) {
@@ -47,4 +49,7 @@ public enum Shelf {
         return capacity;
     }
 
+    public int getDecayModifier() {
+        return decayModifier;
+    }
 }
