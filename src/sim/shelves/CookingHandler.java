@@ -7,7 +7,6 @@ import java.time.Instant;
 import java.util.Map;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -75,7 +74,7 @@ public class CookingHandler implements Runnable {
                 }
                 return canCurrentOrderBeMoved;
             });
-            if (!wereOverflowItemsMoved) {
+            if (!wereOverflowItemsMoved && overflowQueue.size() == OVERFLOW.getCapacity()) {
                 // Items need to be discarded.
                 Order removedOrder = overflowQueue.remove();
                 System.out.printf("Removed %s from OVERFLOW shelf.%n", removedOrder);

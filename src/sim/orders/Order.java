@@ -35,7 +35,11 @@ public class Order {
         this.shelvedAtMillis = shelvedAtMillis;
     }
 
+    /** Computes the value of an order based on shelf time and decay rate in shelf. */
     public double getOrderValue(Shelf shelf) {
+        if (shelfLife <= 0) {
+            return 0;
+        }
         long age = Instant.now().toEpochMilli() - shelvedAtMillis;
         return Math.floor((shelfLife - age - decayRate * age * shelf.getDecayModifier()) / shelfLife);
     }

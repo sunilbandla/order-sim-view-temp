@@ -34,13 +34,16 @@ public class SimulationRunner {
         shelfQueues.put(FROZEN, new LinkedBlockingQueue<>(FROZEN.getCapacity()));
         shelfQueues.put(OVERFLOW, new LinkedBlockingQueue<>(OVERFLOW.getCapacity()));
 
+        // Read from storage.
         OrderStore store = new OrderStoreImpl();
         store.loadAllOrders();
 
+        // Start receiving orders.
         Runnable orderProcessorRunner = new OrderProcessor(ordersPerSecond, store, kitchenQueue, areAllOrdersReceived);
         Thread orderProcessor = new Thread(orderProcessorRunner);
         orderProcessor.start();
 
+        // Start cooking orders.
         Runnable cookingHandlerRunner = new CookingHandler(kitchenQueue, areAllOrdersReceived, shelfQueues, courierService);
         Thread cookingHandler = new Thread(cookingHandlerRunner);
         cookingHandler.start();
@@ -61,6 +64,7 @@ public class SimulationRunner {
         System.out.println("\n\n***** Simulator ended. *****\n\n");
     }
 
+    /** Returns the orders per second passed in run command or the default value (2). */
     private static int getOrdersPerSecondFromInput(String[] args) {
         if (args.length > 0) {
             try {

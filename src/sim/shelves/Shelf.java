@@ -25,6 +25,7 @@ public enum Shelf {
         this.decayModifier = decayModifier;
     }
 
+    /** Returns the shelf corresponding to an order temperature. */
     static Shelf toShelf(String temperature) {
         switch (temperature) {
             case "hot":
@@ -38,6 +39,7 @@ public enum Shelf {
         }
     }
 
+    /** Prints the number of orders in each shelf. */
     public static void logShelfStats(Map<Shelf, BlockingQueue<Order>> shelfQueues) {
         System.out.print("Shelves: ");
         shelfQueues.keySet().forEach(shelf ->
