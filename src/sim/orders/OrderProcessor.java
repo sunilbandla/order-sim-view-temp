@@ -24,7 +24,7 @@ public class OrderProcessor implements Runnable {
     @Override
     public void run() {
         while (!areAllOrdersReceived.get()) {
-            System.out.println("Receiving orders...");
+            System.out.printf("Receiving %s orders per second...%n", ordersPerSecond);
             for (int i = 0; i < ordersPerSecond; i++) {
                 if (orderStore.hasNext()) {
                     Order nextOrder = orderStore.getNext().get();

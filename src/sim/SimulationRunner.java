@@ -25,6 +25,7 @@ public class SimulationRunner {
     private static final AtomicBoolean areAllOrdersReceived = new AtomicBoolean(false);
 
     public static void main(String[] args) throws IOException, InterruptedException {
+        int ordersPerSecond = getOrdersPerSecondFromInput(args);
         System.out.println("\n\n***** Started simulator. *****\n\n");
 
         // Initialize.
@@ -36,7 +37,7 @@ public class SimulationRunner {
         OrderStore store = new OrderStoreImpl();
         store.loadAllOrders();
 
-        Runnable orderProcessorRunner = new OrderProcessor(2, store, kitchenQueue, areAllOrdersReceived);
+        Runnable orderProcessorRunner = new OrderProcessor(ordersPerSecond, store, kitchenQueue, areAllOrdersReceived);
         Thread orderProcessor = new Thread(orderProcessorRunner);
         orderProcessor.start();
 
@@ -58,5 +59,16 @@ public class SimulationRunner {
 
         logShelfStats(shelfQueues);
         System.out.println("\n\n***** Simulator ended. *****\n\n");
+    }
+
+    private static int getOrdersPerSecondFromInput(String[] args) {
+        if (args.length > 0) {
+            try {
+                return Integer.parseInt(args[0]);
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid order rate. " + args[0] + " must be an integer.");
+            }
+        }
+        return 2;
     }
 }
